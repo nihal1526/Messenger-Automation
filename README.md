@@ -41,3 +41,18 @@ C --> D["📝 Collect Lead Info"]
 D --> E["✅ Validate Data"]
 E --> F["📊 Store in Google Sheets"]
 F --> G["📤 Send Confirmation"]
+
+
+---
+
+## 🖼️ Product Preview
+
+<p align="center">
+  <img src="assets/messenger-workflow.png" alt="Messenger AI Lead Bot Workflow" />
+</p>
+
+<p align="center">
+  <b>End-to-end automation:</b> Capture → Process → Store → Respond ⚡
+</p>
+
+---
