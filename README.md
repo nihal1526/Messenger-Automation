@@ -31,28 +31,7 @@ This AI-powered chatbot engages users in a natural conversation, collects essent
 
 ---
 
-## 🧠 How It Works
+## 🖼️ Product Preview
+<p align="center"> <img src="Messenger.png" alt="Messenger AI Lead Bot Workflow" width="900"/> </p> <p align="center"> <b>End-to-end automation:</b> Capture → Process → Store → Respond ⚡ </p>
 
 ```mermaid
-flowchart LR
-A["👤 User Message"] --> B["📩 Messenger Webhook"]
-B --> C["🤖 AI Agent - OpenAI"]
-C --> D["📝 Collect Lead Info"]
-D --> E["✅ Validate Data"]
-E --> F["📊 Store in Google Sheets"]
-F --> G["📤 Send Confirmation"]
-
-
----
-
-## 🖼️ Product Preview
-
-<p align="center">
-  <img src="assets/messenger-workflow.png" alt="Messenger AI Lead Bot Workflow" />
-</p>
-
-<p align="center">
-  <b>End-to-end automation:</b> Capture → Process → Store → Respond ⚡
-</p>
-
----
