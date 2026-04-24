@@ -1,47 +1,38 @@
 {
-  "name": "Messanger",
+  "name": "Messenger",
   "nodes": [
     {
       "parameters": {
         "multipleMethods": true,
-        "path": "c829ff49-e12d-46f4-8f14-a6f5298743b0",
+        "path": "webhook-path",
         "responseMode": "responseNode",
         "options": {}
       },
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2.1,
-      "position": [
-        -448,
-        0
-      ],
-      "id": "5b4956ad-8445-46cc-b150-38a010355cfe",
-      "name": "Webhook",
-      "webhookId": "c829ff49-e12d-46f4-8f14-a6f5298743b0"
+      "position": [-448, 0],
+      "name": "Webhook"
     },
     {
       "parameters": {
         "conditions": {
           "options": {
             "caseSensitive": true,
-            "leftValue": "",
             "typeValidation": "strict",
             "version": 3
           },
           "conditions": [
             {
-              "id": "d145fe0e-a47c-4962-8a56-c401aae7c26d",
               "leftValue": "={{ $json.query['hub.mode'] }}",
               "rightValue": "subscribe",
               "operator": {
                 "type": "string",
-                "operation": "equals",
-                "name": "filter.operator.equals"
+                "operation": "equals"
               }
             },
             {
-              "id": "8608028b-d781-456e-a389-4e3f79240249",
               "leftValue": "={{ $json.query['hub.verify_token'] }}",
-              "rightValue": "janab",
+              "rightValue": "YOUR_VERIFY_TOKEN",
               "operator": {
                 "type": "string",
                 "operation": "equals"
@@ -49,31 +40,21 @@
             }
           ],
           "combinator": "and"
-        },
-        "options": {}
+        }
       },
       "type": "n8n-nodes-base.filter",
       "typeVersion": 2.3,
-      "position": [
-        -240,
-        -96
-      ],
-      "id": "e37cea09-b4f7-4b42-87d6-bc6d4dcbfc25",
-      "name": "Filter"
+      "position": [-240, -96],
+      "name": "Verify Webhook"
     },
     {
       "parameters": {
         "respondWith": "text",
-        "responseBody": "={{ $json.query['hub.challenge'] }}",
-        "options": {}
+        "responseBody": "={{ $json.query['hub.challenge'] }}"
       },
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.5,
-      "position": [
-        -32,
-        -96
-      ],
-      "id": "9c8a6c0b-a704-4c93-af92-5eff25c782dd",
+      "position": [-32, -96],
       "name": "Respond to Webhook"
     },
     {
@@ -81,50 +62,36 @@
         "conditions": {
           "options": {
             "caseSensitive": true,
-            "leftValue": "",
             "typeValidation": "strict",
             "version": 3
           },
           "conditions": [
             {
-              "id": "ad450717-e60f-45c6-b836-6a25eb0389fb",
               "leftValue": "={{ $json.body.entry[0].messaging[0].message }}",
-              "rightValue": "",
               "operator": {
                 "type": "object",
-                "operation": "exists",
-                "singleValue": true
+                "operation": "exists"
               }
             }
-          ],
-          "combinator": "and"
-        },
-        "options": {}
+          ]
+        }
       },
       "type": "n8n-nodes-base.filter",
       "typeVersion": 2.3,
-      "position": [
-        -240,
-        96
-      ],
-      "id": "7de8a806-aa17-44ab-b24f-84577f710ce2",
-      "name": "Filter1"
+      "position": [-240, 96],
+      "name": "Check Message"
     },
     {
       "parameters": {
         "promptType": "define",
         "text": "={{ $json.body.entry[0].messaging[0].message.text }}",
         "options": {
-          "systemMessage": "=You are a professional lead-collection assistant for a service-based company.\n\nYour goal is to collect the user's:\n1. Full Name\n2. Phone Number (with country code)\n3. Email Address\n\nConversation Rules:\n- Ask for one detail at a time.\n- Be polite, clear, and professional.\n- Do not ask multiple questions in a single message.\n- Validate inputs:\n  - Name must contain only letters and spaces.\n  - Phone number must contain digits and may include a country code.\n  - Email must be in a valid email format.\n- If the user provides invalid information, politely ask them to re-enter it.\n- After collecting all details, repeat the information back to the user for confirmation.\n- Only after confirmation, mark the data as “Ready to Save”.\n\nFlow:\n1. Greet the user briefly.\n2. Ask for their full name.\n3. Ask for their phone number.\n4. Ask for their email address.\n5. Confirm all details.\n6. Once confirmed, respond with:\n   \"Thank you. Your details have been recorded. Our team will contact you shortly.\"\n\nImportant:\n- Do not mention Google Sheets explicitly.\n- Do not generate or assume data.\n- Do not proceed to the next step unless the current step is completed.\n- Do not provide services, pricing, or advice—only collect lead information.\n"
+          "systemMessage": "You are a professional lead-collection assistant. Collect Name, Phone, Email step-by-step with validation and confirmation before saving."
         }
       },
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 3.1,
-      "position": [
-        -32,
-        96
-      ],
-      "id": "1b595e7a-9477-41e2-b05e-865c73370533",
+      "position": [-32, 96],
       "name": "AI Agent"
     },
     {
@@ -134,237 +101,100 @@
       },
       "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
       "typeVersion": 1.3,
-      "position": [
-        -16,
-        304
-      ],
-      "id": "94f00299-a410-4f8b-846a-5912d2e4c85f",
-      "name": "Simple Memory"
+      "position": [-16, 304],
+      "name": "Memory"
     },
     {
       "parameters": {
         "method": "POST",
-        "url": "=https://graph.facebook.com/v24.0/{{ $('Webhook').item.json.body.entry[0].messaging[0].recipient.id }}/messages",
+        "url": "=https://graph.facebook.com/vXX.X/{{ $('Webhook').item.json.body.entry[0].messaging[0].recipient.id }}/messages",
         "sendQuery": true,
         "queryParameters": {
           "parameters": [
             {
               "name": "access_token",
-              "value": "EAAMfU7ZATK0oBQnJqZC1tYLcN08vOTZBHTHsiZBQhYFpxgLie5TdVFX4NcZAcG3Wkg5pp0YYHQcWLTPD7d0QZBrQmo8rpZC0qlZBvimwbHmVoZCjfLbjIEDS9jsz18jhPxWghB1LlZCCY0q3AqaZBsvdZBTsZCkeoMUOza2hFXTfh8daDYopii5yuZAhoG9NmjuC5ZBafmXUmP1eAZBbV1ZC5FpqXXcjamEKdVQZDZD"
+              "value": "YOUR_FACEBOOK_PAGE_ACCESS_TOKEN"
             }
           ]
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={{ { \"recipient\": { \"id\": $('Webhook').item.json.body.entry[0].messaging[0].sender.id }, \"messaging_type\": \"RESPONSE\", \"message\": { \"text\": $json.output } } }}",
-        "options": {}
+        "jsonBody": "={{ { \"recipient\": { \"id\": $('Webhook').item.json.body.entry[0].messaging[0].sender.id }, \"messaging_type\": \"RESPONSE\", \"message\": { \"text\": $json.output } } }}"
       },
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.3,
-      "position": [
-        320,
-        96
-      ],
-      "id": "01b310dd-4a55-4ff4-b09d-b1bd563a4108",
-      "name": "HTTP Request"
+      "position": [320, 96],
+      "name": "Send Message"
     },
     {
       "parameters": {
         "operation": "append",
-        "documentId": {
-          "__rl": true,
-          "value": "1WV_YOcS4SNOS-i0m8sMRC_4phUnCY8rqQXabwfy9rXI",
-          "mode": "list",
-          "cachedResultName": "test",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1WV_YOcS4SNOS-i0m8sMRC_4phUnCY8rqQXabwfy9rXI/edit?usp=drivesdk"
-        },
-        "sheetName": {
-          "__rl": true,
-          "value": "gid=0",
-          "mode": "list",
-          "cachedResultName": "Sheet1",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1WV_YOcS4SNOS-i0m8sMRC_4phUnCY8rqQXabwfy9rXI/edit#gid=0"
-        },
+        "documentId": "YOUR_GOOGLE_SHEET_ID",
+        "sheetName": "Sheet1",
         "columns": {
           "mappingMode": "defineBelow",
           "value": {
-            "Name ": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Name_', ``, 'string') }}",
-            "Phone ": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Phone_', ``, 'string') }}",
-            "Email": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Email', ``, 'string') }}"
-          },
-          "matchingColumns": [],
-          "schema": [
-            {
-              "id": "Name ",
-              "displayName": "Name ",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "Phone ",
-              "displayName": "Phone ",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "Email",
-              "displayName": "Email",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            }
-          ],
-          "attemptToConvertTypes": false,
-          "convertFieldsToString": false
-        },
-        "options": {}
+            "Name": "={{ $fromAI('Name', '', 'string') }}",
+            "Phone": "={{ $fromAI('Phone', '', 'string') }}",
+            "Email": "={{ $fromAI('Email', '', 'string') }}"
+          }
+        }
       },
       "type": "n8n-nodes-base.googleSheetsTool",
       "typeVersion": 4.7,
-      "position": [
-        128,
-        304
-      ],
-      "id": "73399f5f-3237-4c6c-9d37-828b2b39a848",
-      "name": "Append row in sheet in Google Sheets",
-      "credentials": {
-        "googleSheetsOAuth2Api": {
-          "id": "QBgwMtJyOBlGmS7S",
-          "name": "Google Sheets account"
-        }
-      }
+      "position": [128, 304],
+      "name": "Save to Google Sheets"
     },
     {
       "parameters": {
-        "model": {
-          "__rl": true,
-          "mode": "list",
-          "value": "gpt-4.1-mini"
-        },
-        "builtInTools": {},
-        "options": {}
+        "model": "gpt-4.1-mini"
       },
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
       "typeVersion": 1.3,
-      "position": [
-        -176,
-        304
-      ],
-      "id": "b213d8ae-013e-4932-a01e-137c99526a79",
-      "name": "OpenAI Chat Model",
-      "credentials": {
-        "openAiApi": {
-          "id": "ho5Vxl7LnPt9JRoI",
-          "name": "OpenAi account"
-        }
-      }
+      "position": [-176, 304],
+      "name": "Chat Model"
     }
   ],
-  "pinData": {},
   "connections": {
     "Webhook": {
       "main": [
-        [
-          {
-            "node": "Filter",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "Filter1",
-            "type": "main",
-            "index": 0
-          }
-        ]
+        [{ "node": "Verify Webhook", "type": "main", "index": 0 }],
+        [{ "node": "Check Message", "type": "main", "index": 0 }]
       ]
     },
-    "Filter": {
+    "Verify Webhook": {
       "main": [
-        [
-          {
-            "node": "Respond to Webhook",
-            "type": "main",
-            "index": 0
-          }
-        ]
+        [{ "node": "Respond to Webhook", "type": "main", "index": 0 }]
       ]
     },
-    "Filter1": {
+    "Check Message": {
       "main": [
-        [
-          {
-            "node": "AI Agent",
-            "type": "main",
-            "index": 0
-          }
-        ]
+        [{ "node": "AI Agent", "type": "main", "index": 0 }]
       ]
     },
     "AI Agent": {
       "main": [
-        [
-          {
-            "node": "HTTP Request",
-            "type": "main",
-            "index": 0
-          }
-        ]
+        [{ "node": "Send Message", "type": "main", "index": 0 }]
       ]
     },
-    "Simple Memory": {
+    "Memory": {
       "ai_memory": [
-        [
-          {
-            "node": "AI Agent",
-            "type": "ai_memory",
-            "index": 0
-          }
-        ]
+        [{ "node": "AI Agent", "type": "ai_memory", "index": 0 }]
       ]
     },
-    "Append row in sheet in Google Sheets": {
+    "Save to Google Sheets": {
       "ai_tool": [
-        [
-          {
-            "node": "AI Agent",
-            "type": "ai_tool",
-            "index": 0
-          }
-        ]
+        [{ "node": "AI Agent", "type": "ai_tool", "index": 0 }]
       ]
     },
-    "OpenAI Chat Model": {
+    "Chat Model": {
       "ai_languageModel": [
-        [
-          {
-            "node": "AI Agent",
-            "type": "ai_languageModel",
-            "index": 0
-          }
-        ]
+        [{ "node": "AI Agent", "type": "ai_languageModel", "index": 0 }]
       ]
     }
   },
   "active": true,
   "settings": {
-    "executionOrder": "v1",
-    "availableInMCP": false
-  },
-  "versionId": "5110b5c5-d7c9-4da4-af2f-450e590d4931",
-  "meta": {
-    "templateCredsSetupCompleted": true,
-    "instanceId": "a395c07e4f097b41a1f4f3e71b2419ebf20007a0d8bf6b249a8c631e4a5b9a9e"
-  },
-  "id": "Qe5y3yZ4GzDSA44pNqFEn",
-  "tags": []
+    "executionOrder": "v1"
+  }
 }
